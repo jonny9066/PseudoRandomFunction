@@ -1,4 +1,15 @@
-# Optimized Implementation of Pseudorandom Functions
+
+# Introduction for MYAO
+
+To compile, use MYAO_PACKED_PRF_CENTRAL flag in mains.hpp.
+Other instructions as previously.
+## Files
+* src/MYAO_Packed_LWE_PRF_central.cpp
+* tests/test_MYAO_Packed_LWE_PRF_central.cpp
+
+
+
+# Optimized Implementation of Pseudorandom Functions 
 
 
 ### 1. Introduction:
@@ -59,7 +70,7 @@ usedLookupTable()| Implements matrix vector multiplication using a lookup table.
 	
 #### 5.2. Fully Distributed wPRF(proposed)
 ##### 5.2.1. Files
-* Basics - include/darkmatter/{PackedMod2.hpp, PackedMod3.hpp, utils.hpp, Timing.hpp}
+* Basics - include/darkmatter/{packedMod2.hpp,packedMod3.hpp,utils.hpp,Timing.hpp}
 * src/newprotocol.cpp
 * tests/test_newprotocol.cpp
 
