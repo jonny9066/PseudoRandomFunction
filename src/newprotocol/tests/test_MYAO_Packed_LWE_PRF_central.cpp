@@ -14,24 +14,29 @@
 #include "Timing.hpp"
 #include <chrono>
 
+#include "test_packedMod2.cpp" // testing toeplitz matrix stuff
+
 using namespace std;
 
 #ifdef MYAO_PACKED_PRF_CENTRAL//computes wPRF using centralized method. Use for timing purpose
 
 int main(int argc,char* argv[] )  {
 
-    int ntimes = 1;
-    int nRuns = 1000; //number of times the program runs
-    int stepsToRun = 1;
+    bool result = test_toeplitzMatrix();
+    cout<<result<<endl;
 
-    std::cout<<"Running Packed LWE PRF Centralized for "<<nRuns<<" times."<<std::endl;
+    // int ntimes = 1;
+    // int nRuns = 1000; //number of times the program runs
+    // int stepsToRun = 1;
 
-    using Clock = std::chrono::system_clock;
-    using Duration = Clock::duration;   //Clock to determine measuring metric of different system.
-    std::cout << Duration::period::num << " , " << Duration::period::den << '\n';
+    // std::cout<<"Running Packed LWE PRF Centralized for "<<nRuns<<" times."<<std::endl;
 
-    PRF_packed(ntimes, nRuns, stepsToRun);//called function is in packed_PRF_central.cpp
-    display_times(nRuns);//displays the timing of execution of each phase, in packed_PRF_central.cpp
+    // using Clock = std::chrono::system_clock;
+    // using Duration = Clock::duration;   //Clock to determine measuring metric of different system.
+    // std::cout << Duration::period::num << " , " << Duration::period::den << '\n';
+
+    // PRF_packed(ntimes, nRuns, stepsToRun);//called function is in packed_PRF_central.cpp
+    // display_times(nRuns);//displays the timing of execution of each phase, in packed_PRF_central.cpp
 }
 #endif
 

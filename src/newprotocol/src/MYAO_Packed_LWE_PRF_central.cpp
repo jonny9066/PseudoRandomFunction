@@ -56,39 +56,55 @@ void PRF_packed_test(std::vector<uint64_t>& K1, PackedZ2<N_COLS>& x1, std::vecto
         K[i] = K1[i] ^ K2[i];
     }
 
-    // convert input and K from z2 to z3
-    PackedZ2<N_SIZE> K_Z2;
-    K_Z2.makeFromBits(K); // convert to Packed format
-
-    PackedZ3<N_COLS> X_Z3;
-    PackedZ3<N_COLS> K_Z3;
-
-    PackedZ2<N_SIZE> hi; //MSB will be initialized to 0, since Z2 to Z3 won't affect the MSB's
-
-    K_Z3.makeFromBits(hi.bits, K_Z2.bits);
-    X_Z3.makeFromBits(hi.bits, X.bits);
-
-
     // perform matrix multiplication in Z2
     PackedZ2<N_COLS> outKX_Z2; //stores the output of K*x in Z2
 
     //Since K is a toeplitz, this function performs matrix vector multiplication where matrix is of kind toeplitz
     outKX_Z2.toeplitzByVec(K,X);
 
+    // perform matrix multiplication in z3
+    // convert x to z3
+    PackedZ3<N_COLS> X_Z3;
 
-    //TODO multiply x by k in z3
+    PackedZ2<N_SIZE> hi; //MSB will be initialized to 0, since Z2 to Z3 won't affect the MSB's
+
+    X_Z3.makeFromBits(hi.bits, X.bits);
+
+    // create z3 toeplitz from key
+    PackedZ2<N_SIZE> K_Z2;
+    K_Z2.makeFromBits(K); // convert to Packed format
+
+    std::vector< PackedZ2<N_SIZE> > K_Z2_mat(N_SIZE);
+    PackedZ2<N_SIZE>::toeplitzMatrix(K_Z2_mat, K, N_SIZE);
+
+    // convert every column to z3
+    std::vector< PackedZ3<N_SIZE> > K_Z3_mat(N_SIZE);
+    for(int i = 0; i < K_Z2_mat.size(); i++)
+         K_Z3_mat[i].makeFromBits(hi.bits, K_Z2_mat[i].bits);
+    
+
+    // PackedZ3<N_COLS> K_Z3;
+    // K_Z3.makeFromBits(hi.bits, K_Z2.bits);
+
+    // multiply k by x in z3
     PackedZ3<N_COLS> outKX_Z3; //stores the output of K*x in Z3
+    outKX_Z3.matByVec(K_Z3_mat, X_Z3);
 
 
+    // convert result to z2
+    PackedZ2<N_COLS> outKX_Z3_Z2; //stores the output of K*x in Z3
+    outKX_Z3_Z2 = outKX_Z3.lsbs();
 
-
-    // TODO convert result to z2
-
-
-    // TODO xor the results
+    // xor the results
+    PackedZ2<N_COLS> outXOR; 
+    for(int i = 0; i < outXOR.bits.size(); i++){
+        outXOR.bits[i] = outKX_Z3_Z2.bits[i] | outKX_Z2.bits[i];
+    }
 
 
     //TODO apply final transformation
+    PackedZ3<81> finalOut;
+
 
     // auto start_prf = std::chrono::system_clock::now();//start the clock
 
@@ -101,7 +117,7 @@ void PRF_packed_test(std::vector<uint64_t>& K1, PackedZ2<N_COLS>& x1, std::vecto
     // outKX_Z3.makeFromBits(hi.bits, outKX.bits);//outKX_Z3 is a Z3 containing 0/1 values in Z2
     // timer_packed_cent_p2 += (std::chrono::system_clock::now() - start_p2).count();//time the clock and take difference from start_p2
 
-    //PackedZ3<81> outZ3;//final Z3 output
+    PackedZ3<81> outZ3;//final Z3 output
     auto start_p3 = chrono::system_clock::now();        //start the clock and save the time.
     outZ3.matByVec(Rmat,outKX_Z3);              //output of Rmat * (K * x); output of wPRF
     timer_packed_cent_p3 += (std::chrono::system_clock::now() - start_p3).count();//time the clock and take difference from start_p3

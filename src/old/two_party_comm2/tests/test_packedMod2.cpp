@@ -373,7 +373,7 @@ static bool test_toeplitzMatrix() {
 // void toeplitzByVec(const std::vector<uint64_t>& T,PackedZ2<COLS> &vec)
 static bool test_toeplitzByVec() {
     PackedZ2<256> vec;                     // 256-vector
-    std::vector< PackedZ2<192> > mat(256); // 192x256 matrix
+    // std::vector< PackedZ2<192> > mat(256); // 192x256 matrix
     PackedZ2<192> out;                     // 192-vector
 
     // 256+192-1=457 bits to specify this matrix
