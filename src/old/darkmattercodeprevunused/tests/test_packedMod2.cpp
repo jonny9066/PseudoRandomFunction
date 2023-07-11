@@ -335,17 +335,18 @@ static bool test_toeplitzMatrix() {
     std::vector< PackedZ2<4> > mat(8); // 4x8 matrix
 
     // 4+8-1=11 bits to specify this matrix (in the low bits of T[0])
-    std::vector<uint64_t> T = { 0x652 }; // binary 110 0101 0011
+    std::vector<uint64_t> T = { 0x652 }; // binary 0110 0101 0010
     // represents (in big endian) the matrix:
-    //    0 1 0 0 1 0 1 0
-    //    1 0 0 1 0 1 0 0
-    //    0 0 1 0 1 0 0 1
-    //    0 1 0 1 0 0 1 1
+    //    0 1 1 0 1 0 1 0
+    //    1 1 0 1 0 1 0 0
+    //    1 0 1 0 1 0 0 1
+    //    0 1 0 1 0 0 1 0
     // binary of T in reverse is left column and bottom row
 
     PackedZ2<4>::toeplitzMatrix(mat, T, 8); // expand Teoplitz matrix
 
     // check the result
+    // expected[0] is last column reversed
     std::vector< std::vector<unsigned int> > expected = {
         {0, 1, 0, 0}, {1, 0, 0, 1}, {0, 0, 1, 0}, {0, 1, 0, 1},
         {1, 0, 1, 0}, {0, 1, 0, 0}, {1, 0, 0, 1}, {0, 0, 1, 1}

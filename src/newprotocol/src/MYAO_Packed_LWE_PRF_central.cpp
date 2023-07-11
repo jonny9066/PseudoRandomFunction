@@ -43,7 +43,7 @@ void set_distributed_input(std::vector<uint64_t>& K1, PackedZ2<N_COLS>& x1, std:
 }
 
 void PRF_packed_test(std::vector<uint64_t>& K1, PackedZ2<N_COLS>& x1, std::vector<uint64_t>& K2,
-                          PackedZ2<N_COLS>& x2, std::vector< PackedZ3<81> >& Rmat, PackedZ3<81>& outZ3, int runs)
+                          PackedZ2<N_COLS>& x2, std::vector< PackedZ2<81> >& Rmat, PackedZ2<81>& outZ2, int runs)
 {
     //1.perform X = x1+ x2 (on vectors)
     PackedZ2<N_COLS> X = x1; //declare a variable
