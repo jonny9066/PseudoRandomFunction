@@ -4,6 +4,8 @@
 // copied for MYAO project by Jonathan Bronshtein on 8/7/23
 
 
+#ifdef MYAO_PACKED_PRF_CENTRAL
+
 #include <cassert>
 #include "packedMod2.hpp"
 #include "Toeplitz-by-x.hpp"
@@ -103,8 +105,10 @@ void PRF_packed_test(std::vector<uint64_t>& K1, PackedZ2<N_COLS>& x1, std::vecto
 
 
     //TODO apply final transformation
-    PackedZ2<81> finalOut;
-    finalOut.matByVec(Rmat,outKX_Z3_Z2);
+    // PackedZ2<81> finalOut;
+    outZ2.matByVec(Rmat,outKX_Z3_Z2);
+
+
 
     // auto start_prf = std::chrono::system_clock::now();//start the clock
 
@@ -167,3 +171,5 @@ void display_times(int nRuns)
     // std::cout<<"Number of rounds per second for phase 3(Randomization multiplication) "<<(1000/(timer_packed_cent_p3*time_unit_multiplier)*1000000)<<std::endl;
     // std::cout<<"Number of rounds per second for entire packed centralized PRF "<<(1000/(timer_PRF_packed*time_unit_multiplier)*1000000)<<std::endl;
 }
+
+#endif
