@@ -23,7 +23,7 @@ long timer_packed_cent_p3 = 0;//timing to compute matrix vector computation betw
 
 //sets random values to shares of input and key for two parties
 void set_distributed_input(std::vector<uint64_t>& K1, PackedZ2<N_COLS>& x1, std::vector<uint64_t>& K2,
-                           PackedZ2<N_COLS>& x2, std::vector< PackedZ3<81> >& Rmat)
+                           PackedZ2<N_COLS>& x2, std::vector< PackedZ2<81> >& Rmat)
 {
     randomWord(1); // use seed=1
 
@@ -43,7 +43,7 @@ void set_distributed_input(std::vector<uint64_t>& K1, PackedZ2<N_COLS>& x1, std:
 }
 
 void PRF_packed_test(std::vector<uint64_t>& K1, PackedZ2<N_COLS>& x1, std::vector<uint64_t>& K2,
-                          PackedZ2<N_COLS>& x2, std::vector< PackedZ2<81> >& Rmat, PackedZ2<81>& outZ2, int runs)
+                          PackedZ2<N_COLS>& x2, std::vector< PackedZ2<81> >& Rmat, PackedZ2<81>& outZ2)
 {
     //1.perform X = x1+ x2 (on vectors)
     PackedZ2<N_COLS> X = x1; //declare a variable
@@ -71,8 +71,8 @@ void PRF_packed_test(std::vector<uint64_t>& K1, PackedZ2<N_COLS>& x1, std::vecto
     X_Z3.makeFromBits(hi.bits, X.bits);
 
     // create z3 toeplitz from key
-    PackedZ2<N_SIZE> K_Z2;
-    K_Z2.makeFromBits(K); // convert to Packed format
+    // PackedZ2<N_SIZE> K_Z2;
+    // K_Z2.makeFromBits(K); // convert to Packed format
 
     std::vector< PackedZ2<N_SIZE> > K_Z2_mat(N_SIZE);
     PackedZ2<N_SIZE>::toeplitzMatrix(K_Z2_mat, K, N_SIZE);
@@ -103,8 +103,8 @@ void PRF_packed_test(std::vector<uint64_t>& K1, PackedZ2<N_COLS>& x1, std::vecto
 
 
     //TODO apply final transformation
-    PackedZ3<81> finalOut;
-
+    PackedZ2<81> finalOut;
+    finalOut.matByVec(Rmat,outKX_Z3_Z2);
 
     // auto start_prf = std::chrono::system_clock::now();//start the clock
 
@@ -117,10 +117,10 @@ void PRF_packed_test(std::vector<uint64_t>& K1, PackedZ2<N_COLS>& x1, std::vecto
     // outKX_Z3.makeFromBits(hi.bits, outKX.bits);//outKX_Z3 is a Z3 containing 0/1 values in Z2
     // timer_packed_cent_p2 += (std::chrono::system_clock::now() - start_p2).count();//time the clock and take difference from start_p2
 
-    PackedZ3<81> outZ3;//final Z3 output
-    auto start_p3 = chrono::system_clock::now();        //start the clock and save the time.
-    outZ3.matByVec(Rmat,outKX_Z3);              //output of Rmat * (K * x); output of wPRF
-    timer_packed_cent_p3 += (std::chrono::system_clock::now() - start_p3).count();//time the clock and take difference from start_p3
+    // PackedZ3<81> outZ3;//final Z3 output
+    // auto start_p3 = chrono::system_clock::now();        //start the clock and save the time.
+    // outZ3.matByVec(Rmat,outKX_Z3);              //output of Rmat * (K * x); output of wPRF
+    // timer_packed_cent_p3 += (std::chrono::system_clock::now() - start_p3).count();//time the clock and take difference from start_p3
 
     // timer_PRF_packed += (std::chrono::system_clock::now() - start_prf).count();
 
@@ -131,18 +131,18 @@ void PRF_packed(int nTimes,  int nRuns, int nStages)
     //Declare the input shares and key shares which will be distributed among two parties
     vector<uint64_t> K1(toeplitzWords), K2(toeplitzWords);
     PackedZ2<N_COLS> x1, x2;
-    std::vector<PackedZ3<81> > Rmat(256); // generate a 81x256 matrix, publicly available
+    std::vector<PackedZ2<81> > Rmat(256); // generate a 81x256 matrix, publicly available
 
-    PackedZ3<81> outZ3;                     // 81 bit vector in Z3, stores the output of PRF_packed_test
-    PackedZ3<81> outZ3_dummy;       //dummy variable to make sure that output value is used.
+    PackedZ2<81> outZ2;                     // 81 bit vector in Z3, stores the output of PRF_packed_test
+    PackedZ2<81> outZ2_dummy;       //dummy variable to make sure that output value is used.
 
     set_distributed_input(K1,x1,K2,x2,Rmat);//sets input with random values; in packed_PRF_central.cpp
 
     for (int i = 0; i < nRuns; i++) {
-        PRF_packed_test(K1, x1, K2, x2, Rmat, outZ3, i);//calls the function in packed_PRF_central.cpp
-        outZ3_dummy+=outZ3; //cumulative addition to make sure values are used and timing are more accurate.
+        PRF_packed_test(K1, x1, K2, x2, Rmat, outZ2);//calls the function in packed_PRF_central.cpp
+        outZ2_dummy^=outZ2; //cumulative addition to make sure values are used and timing are more accurate.
     }
-    std::cout<<"Output of packed_PRF_central is "<<outZ3<<  std::endl;
+    std::cout<<"Output of packed_PRF_central is "<<outZ2<<  std::endl;
 }
 
 //Displays the timing after measuring unit metric for the machine it runs in.
