@@ -60,5 +60,5 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp"
     },
-    "cmake.sourceDirectory": "/home/jon123/PseudoRandomFunction/src/newprotocol"
+    "cmake.sourceDirectory": "/home/jon/PseudoRandomFunction/src/newprotocol"
 }

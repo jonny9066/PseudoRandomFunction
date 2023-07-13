@@ -6,8 +6,8 @@
 /*
  * Centralized implementation flags
  */
-// #define MYAO_PACKED_PRF_CENTRAL
-#define PACKED_PRF_CENTRAL //packed centralized PRF with matbyvec multiplication: Timing purpose
+#define MYAO_PACKED_PRF_CENTRAL
+// #define PACKED_PRF_CENTRAL //packed centralized PRF with matbyvec multiplication: Timing purpose
 //#define PACKED_PRF_CENTRAL_LOOKUP //packed centralized PRF with lookup table
 //#define UNPACKED_PRF_CENTRAL  //unpacked centralized PRF, everything performed naively
 //#define TEST_INTEGER_PACKING

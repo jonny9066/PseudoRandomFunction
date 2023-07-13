@@ -3,9 +3,6 @@
 //
 // copied for MYAO project by Jonathan Bronshtein on 8/7/23
 
-
-#ifdef MYAO_PACKED_PRF_CENTRAL
-
 #include <cassert>
 #include "packedMod2.hpp"
 #include "Toeplitz-by-x.hpp"
@@ -14,6 +11,9 @@
 #include <typeinfo>//to determine the type of variables
 #include "Timing.hpp"
 #include <chrono>
+
+#ifdef MYAO_PACKED_PRF_CENTRAL
+
 
 using namespace std;
 

@@ -27,11 +27,6 @@
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
             "args": [
-                "-std=c++14",
-                "-o wprf.o",
-                "-I {workspaceFolder}/src/include/darkmatter/"
-                // "src/*.cpp",
-                // "tests/*.cpp"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
